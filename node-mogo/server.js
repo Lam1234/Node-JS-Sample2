@@ -8,75 +8,81 @@ var mongoClient = require('mongodb').MongoClient;
 
 var mongodb;
 
+//Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
+
 
 app.get('/', function(request, response){
 
-	response.send('welcome to ');
+	response.send('Welcome to Lam Website!');
+
 });
 
-app.post('/savedetails', function(){
+
+app.post('/savedetails', function(request, response){
 
 	console.log(request.body);
 
 	if(mongodb != null && mongodb != undefined){
 
-			var resultObject = {};
+		var resultObj = {};
 
-			mongodb.collection('sample').insertOne(request.body, function(error, result){
+		mongodb.collection('lam').insertOne(request.body, function(error, result){
 
-				if(error){
+			if(error){
 
-					resultObject.status = 'fail';
+				resultObj.status = 'Fail';
 
-					resultObject.statusCode = 401;
+				resultObj.statusCode = 401;
 
-					resultObject.message = 'create new record failed';
+				resultObj.message = 'Create new record failed';
 
-					response.send(JSON.stringify(resultObject));
+				response.send(JSON.stringify(resultObj));
 
-				}else{
+			}else{
 
-					resultObject.status = 'success';
+				resultObj.status = 'Success';
 
-					resultObject.statusCode = 200;
+				resultObj.statusCode = 200;
 
-					resultObject.message = 'create new record success';
+				resultObj.message = 'Create new record success';
 
-					response.send(JSON.stringify(resultObject));
+				response.send(JSON.stringify(resultObj));
 
-				}
+			}
 
-			});
-
+		});
 	}
 });
 
+
 app.listen(5244, function(){
 
-		console.log('server running at http://localhost:5244');
+	console.log('server running at http://localhost:5244');
 
-		createMongoDbConnection();
-
+	createMongoDbConnection();
 
 });
 
+
+//set up mongodb connection
 function createMongoDbConnection(){
 
 	if(mongoClient != null && mongoClient != undefined){
 
-		mongoClient.connect('mongodb://localhost:27017/sample',function(error, dbInstance){
+		mongoClient.connect('mongodb://localhost:27017/lam',function(error, dbObj){
 
 			if(error){
 
-				mongo = null;
+				mongodb = null;
 
-				console.log('mongodb connection creation faile');
+				console.log('Create mongodb connection failed');
+
 			}else{
 
-				mongodb = dbInstance;
+				mongodb = dbObj;
 
-				console.log('mongodb connection created successfully');
+				console.log('Create mongodb connection success');
 			}
 
 		});
